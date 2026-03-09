@@ -1,0 +1,116 @@
+:root {
+  font-family: Inter, system-ui, sans-serif;
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  background: #f5f7fb;
+  color: #1f2937;
+}
+
+header {
+  background: #0c4a6e;
+  color: #fff;
+  padding: 1.2rem;
+}
+
+main {
+  max-width: 1100px;
+  margin: 1rem auto;
+  padding: 0 1rem 2rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 1rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 0.7rem;
+}
+
+.inline-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: end;
+}
+
+input,
+select,
+button {
+  font: inherit;
+  padding: 0.5rem;
+}
+
+button {
+  background: #0369a1;
+  color: white;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:hover { background: #075985; }
+
+ul { padding-left: 1.2rem; }
+
+.hidden { display: none; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border-bottom: 1px solid #e5e7eb;
+  padding: 0.45rem;
+  text-align: center;
+}
+
+th:nth-child(2),
+td:nth-child(2) { text-align: left; }
+
+.jornada {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 0.7rem;
+  margin-top: 0.7rem;
+}
+
+.match {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.6rem;
+  align-items: center;
+  margin: 0.35rem 0;
+}
+
+.score-inputs input {
+  width: 60px;
+}
+
+.table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+@media print {
+  body * { visibility: hidden; }
+  #table-capture, #table-capture * { visibility: visible; }
+  #table-capture { position: absolute; left: 0; top: 0; width: 100%; }
+}
