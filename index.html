@@ -14,13 +14,21 @@
   <body>
     <section id="auth-view" class="auth-wrap">
       <article class="auth-card">
-        <h1>LigaFácil</h1>
-        <p>Inicia sesión para administrar tus ligas.</p>
-        <form id="auth-form" class="grid-2">
-          <input id="auth-user" required placeholder="Usuario" />
-          <input id="auth-pass" type="password" required placeholder="Contraseña" />
+        <h1>Login</h1>
+        <p class="auth-subtitle">Bienvenido a LigaFácil ⚽</p>
+        <form id="auth-form" class="auth-form">
+          <label class="input-row">
+            <span>👤</span>
+            <input id="auth-user" required placeholder="Usuario" />
+          </label>
+          <label class="input-row">
+            <span>🔒</span>
+            <input id="auth-pass" type="password" required placeholder="Contraseña" />
+          </label>
           <button type="submit">Entrar / Registrar</button>
         </form>
+        <p class="auth-note">Al iniciar sesión aceptas los términos de uso de LigaFácil.</p>
+        <p class="auth-link">¿No tienes cuenta? <strong>Solo escribe usuario y contraseña para registrarte.</strong></p>
       </article>
     </section>
 
