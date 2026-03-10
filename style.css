@@ -165,3 +165,25 @@ th:nth-child(2), td:nth-child(2) { text-align: left; }
   #table-capture, #table-capture * { visibility: visible; }
   #table-capture { position: absolute; left: 0; top: 0; width: 100%; background: #fff; }
 }
+
+
+.playoff-head {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.8rem;
+}
+.playoff-head small { color: var(--muted); }
+.playoff-round {
+  margin-top: 0.7rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 0.6rem;
+  background: #fff;
+}
+.playoff-round h3 {
+  margin: 0 0 0.4rem;
+  font-size: 1rem;
+}
+.playoff-round ul { margin: 0; }

@@ -122,6 +122,22 @@
               </table>
             </div>
           </section>
+
+          <section class="card">
+            <h2>Liguilla / Copa (eliminatorias)</h2>
+            <form id="playoff-form" class="inline-form">
+              <input id="playoff-name" placeholder="Nombre (ej. Liguilla Clausura)" required />
+              <select id="playoff-type">
+                <option value="Liguilla">Liguilla</option>
+                <option value="Copa">Copa</option>
+              </select>
+              <label>Posición inicial <input id="pos-from" type="number" min="1" value="1" required /></label>
+              <label>Posición final <input id="pos-to" type="number" min="2" value="8" required /></label>
+              <button type="submit">Crear cruces</button>
+            </form>
+            <div id="playoff-bracket"><p>Aún no hay eliminatoria creada.</p></div>
+          </section>
+
         </section>
       </main>
     </div>

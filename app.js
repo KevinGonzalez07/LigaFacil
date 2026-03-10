@@ -29,6 +29,7 @@ function initLeague(league) {
   league.matchDuration ??= 60;
   league.absences ??= [];
   league.matches ??= [];
+  league.playoff ??= null;
 }
 
 function nextSaturday(dateStr) {
@@ -116,8 +117,7 @@ function refreshLeagueSelect() {
   });
 }
 
-function renderStandings() {
-  const league = currentLeague();
+function getStandingsRows(league) {
   const table = Object.fromEntries(league.teams.map((t) => [t.id, { ...t, pts: 0, gf: 0, gc: 0, jg: 0, je: 0, jp: 0 }]));
 
   league.matches.forEach((m) => {
@@ -131,13 +131,64 @@ function renderStandings() {
     else { h.pts++; a.pts++; h.je++; a.je++; }
   });
 
-  const rows = Object.values(table)
+  return Object.values(table)
     .map((r) => ({ ...r, gd: r.gf - r.gc }))
     .sort((x, y) => y.pts - x.pts || y.gd - x.gd || y.gf - x.gf || x.name.localeCompare(y.name));
+}
 
+function renderStandings() {
+  const league = currentLeague();
+  const rows = getStandingsRows(league);
   $('standings-body').innerHTML = rows.map((r, i) =>
     `<tr><td>${i + 1}</td><td>${r.name}</td><td>${r.pts}</td><td>${r.gd}</td><td>${r.gf}</td><td>${r.gc}</td><td>${r.jg}</td><td>${r.je}</td><td>${r.jp}</td></tr>`
   ).join('');
+}
+
+function roundLabel(teamCount) {
+  if (teamCount === 2) return 'Final';
+  if (teamCount === 4) return 'Semifinal';
+  if (teamCount === 8) return 'Cuartos de final';
+  if (teamCount === 16) return 'Octavos de final';
+  return `Ronda de ${teamCount}`;
+}
+
+function isPowerOfTwo(n) {
+  return n > 1 && (n & (n - 1)) === 0;
+}
+
+function createEliminationBracket(teams) {
+  const rounds = [];
+  let current = teams.map((t, i) => ({ seed: i + 1, name: t.name }));
+  while (current.length >= 2) {
+    const matches = [];
+    for (let i = 0; i < current.length / 2; i++) {
+      const a = current[i];
+      const b = current[current.length - 1 - i];
+      matches.push({ home: `${a.seed}. ${a.name}`, away: `${b.seed}. ${b.name}` });
+    }
+    rounds.push({ name: roundLabel(current.length), matches });
+    current = Array.from({ length: current.length / 2 }, (_, i) => ({ seed: i + 1, name: `Ganador ${rounds[rounds.length - 1].name} ${i + 1}` }));
+  }
+  return rounds;
+}
+
+function renderPlayoff() {
+  const league = currentLeague();
+  const box = $('playoff-bracket');
+  if (!league.playoff) {
+    box.innerHTML = '<p>Aún no hay eliminatoria creada.</p>';
+    return;
+  }
+
+  box.innerHTML = `
+    <div class="playoff-head"><strong>${league.playoff.type}: ${league.playoff.name}</strong><small> Posiciones ${league.playoff.from} a ${league.playoff.to}</small></div>
+    ${league.playoff.rounds.map((r) => `
+      <article class="playoff-round">
+        <h3>${r.name}</h3>
+        <ul>${r.matches.map((m) => `<li>${m.home} vs ${m.away}</li>`).join('')}</ul>
+      </article>
+    `).join('')}
+  `;
 }
 
 function renderSchedule() {
@@ -182,8 +233,16 @@ function renderLeague() {
   $('absence-team').innerHTML = league.teams.map((t) => `<option value="${t.id}">${t.name}</option>`).join('');
   $('capture-league-title').textContent = `${league.name} - ${league.season}`;
 
+  if (league.playoff) {
+    $('playoff-name').value = league.playoff.name;
+    $('playoff-type').value = league.playoff.type;
+    $('pos-from').value = league.playoff.from;
+    $('pos-to').value = league.playoff.to;
+  }
+
   renderSchedule();
   renderStandings();
+  renderPlayoff();
 }
 
 function applySessionUI() {
@@ -228,7 +287,7 @@ $('league-form').addEventListener('submit', (e) => {
     startDate: $('start-date').value,
     teams: [], venues: [],
     timeWindow: { start: '08:00', end: '16:00' },
-    matchDuration: 60, absences: [], matches: []
+    matchDuration: 60, absences: [], matches: [], playoff: null
   };
   state.leagues.push(league);
   saveState();
@@ -281,6 +340,36 @@ $('schedule-form').addEventListener('submit', (e) => {
   generateSchedule(league, Number($('rounds').value));
   saveState();
   renderLeague();
+});
+
+$('playoff-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const league = currentLeague();
+  const standings = getStandingsRows(league);
+  const from = Number($('pos-from').value);
+  const to = Number($('pos-to').value);
+
+  if (from < 1 || to > standings.length || from >= to) {
+    alert('Rango de posiciones inválido.');
+    return;
+  }
+
+  const selected = standings.slice(from - 1, to);
+  if (!isPowerOfTwo(selected.length)) {
+    alert('El rango debe incluir 2, 4, 8, 16... equipos para armar eliminatoria.');
+    return;
+  }
+
+  league.playoff = {
+    name: $('playoff-name').value.trim(),
+    type: $('playoff-type').value,
+    from,
+    to,
+    rounds: createEliminationBracket(selected)
+  };
+
+  saveState();
+  renderPlayoff();
 });
 
 $('print-table').addEventListener('click', () => window.print());
