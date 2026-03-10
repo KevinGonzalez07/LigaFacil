@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LigaFácil</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <script defer src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script defer src="app.js"></script>
+  </head>
+  <body>
+    <section id="auth-view" class="auth-wrap">
+      <article class="auth-card">
+        <h1>Login</h1>
+        <p class="auth-subtitle">Bienvenido a LigaFácil ⚽</p>
+        <form id="auth-form" class="auth-form">
+          <label class="input-row"><span>👤</span><input id="auth-user" required placeholder="Usuario" /></label>
+          <label class="input-row"><span>🔒</span><input id="auth-pass" type="password" required placeholder="Contraseña" /></label>
+          <button type="submit">Entrar / Registrar</button>
+        </form>
+        <p class="auth-note">Al iniciar sesión aceptas los términos de uso de LigaFácil.</p>
+        <p class="auth-link">¿No tienes cuenta? <strong>Solo escribe usuario y contraseña para registrarte.</strong></p>
+      </article>
+    </section>
+
+    <div id="app-view" class="hidden">
+      <header class="site-nav">
+        <div class="brand">⚽ LigaFácil</div>
+        <nav>
+          <a href="#">Ligas</a>
+          <a href="#">Jornadas</a>
+          <a href="#">Tabla</a>
+        </nav>
+        <button id="logout-btn" class="ghost">Cerrar sesión</button>
+      </header>
+
+      <section class="hero">
+        <div>
+          <h1>Gestiona tus ligas con estilo y sin complicaciones</h1>
+          <p>Crea ligas, arma jornadas sabatinas, registra resultados y comparte tablas como imagen o impresión.</p>
+        </div>
+      </section>
+
+      <main>
+        <section class="card">
+          <h2>1) Crear liga</h2>
+          <form id="league-form" class="grid-3">
+            <input id="league-name" required placeholder="Nombre de la liga" />
+            <input id="season-name" required placeholder="Temporada (ej. Apertura 2026)" />
+            <input id="start-date" type="date" required />
+            <button type="submit">Crear liga</button>
+          </form>
+        </section>
+
+        <section class="card">
+          <h2>2) Seleccionar liga</h2>
+          <select id="league-select"></select>
+        </section>
+
+        <section id="league-panel" class="hidden">
+          <section class="card">
+            <h2>Equipos</h2>
+            <form id="team-form" class="inline-form">
+              <input id="team-name" required placeholder="Nombre del equipo" />
+              <button type="submit">Agregar equipo</button>
+            </form>
+            <ul id="team-list"></ul>
+          </section>
+
+          <section class="card">
+            <h2>Campos y horario de jornada</h2>
+            <form id="venue-form" class="inline-form">
+              <input id="venue-name" required placeholder="Nombre del campo" />
+              <button type="submit">Agregar campo</button>
+            </form>
+            <ul id="venue-list"></ul>
+            <form id="time-window-form" class="inline-form">
+              <label>Desde <input id="time-start" type="time" required /></label>
+              <label>Hasta <input id="time-end" type="time" required /></label>
+              <label>Duración (min) <input id="match-duration" type="number" min="30" step="5" value="60" required /></label>
+              <button type="submit">Guardar horario</button>
+            </form>
+          </section>
+
+          <section class="card">
+            <h2>Permisos / ausencias por jornada</h2>
+            <form id="absence-form" class="inline-form">
+              <input id="absence-date" type="date" required />
+              <select id="absence-team"></select>
+              <button type="submit">Marcar permiso</button>
+            </form>
+            <ul id="absence-list"></ul>
+          </section>
+
+          <section class="card">
+            <h2>Calendario (jornadas sabatinas)</h2>
+            <form id="schedule-form" class="inline-form">
+              <label>Vueltas <input id="rounds" type="number" min="1" max="4" value="1" required /></label>
+              <button type="submit">Generar/Regenerar jornadas</button>
+            </form>
+            <div id="schedule"></div>
+          </section>
+
+          <section class="card">
+            <div class="table-header">
+              <h2>Tabla general</h2>
+              <div class="actions">
+                <button id="print-table">Imprimir tabla</button>
+                <button id="download-image">Descargar imagen</button>
+              </div>
+            </div>
+            <div id="table-capture">
+              <h3 id="capture-league-title"></h3>
+              <table>
+                <thead>
+                  <tr><th>#</th><th>Equipo</th><th>PTS</th><th>DG</th><th>GF</th><th>GC</th><th>JG</th><th>JE</th><th>JP</th></tr>
+                </thead>
+                <tbody id="standings-body"></tbody>
+              </table>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
